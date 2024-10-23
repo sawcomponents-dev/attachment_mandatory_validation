@@ -7,7 +7,8 @@
  "engine": "InnoDB",
  "field_order": [
   "select_doctype",
-  "workflow_state",
+  "state",
+  "workflow_action",
   "attachment_mandatory"
  ],
  "fields": [
@@ -21,23 +22,31 @@
    "unique": 1
   },
   {
-   "fieldname": "workflow_state",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Workflow State",
-   "options": "Workflow State",
-   "reqd": 1
-  },
-  {
    "default": "0",
    "fieldname": "attachment_mandatory",
    "fieldtype": "Check",
    "label": "Attachment Mandatory"
+  },
+  {
+   "fieldname": "workflow_action",
+   "fieldtype": "Link",
+   "label": "Workflow Action",
+   "options": "Workflow Action Master",
+   "reqd": 1
+  },
+  {
+   "fieldname": "state",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "State",
+   "options": "Workflow State",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-10-04 18:40:13.408900",
+ "modified": "2024-10-22 19:06:40.285599",
  "modified_by": "Administrator",
  "module": "Attachment Mandatory Validation",
  "name": "Attachment Validation Settings",

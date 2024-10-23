@@ -4,7 +4,6 @@
 import frappe
 from frappe.model.document import Document
 
-
 class AttachmentValidationSettings(Document):
 	pass
 
@@ -35,10 +34,35 @@ def get_workflow_state(doctype, txt, searchfield, start, page_len, filters):
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
 def get_doctype(doctype, txt, searchfield, start, page_len, filters):
-	cond = f"AND name in ('Purchase Order', 'Purchase Receipt', 'Purchase Invoice')"
+	cond = f"AND name in ('Purchase Order', 'Purchase Receipt', 'Purchase Invoice', 'Supplier Quotation')"
 
 	return frappe.db.sql(
 		f"""select name from `tabDocType`
+			where `{searchfield}` LIKE %(txt)s {cond}
+			order by name limit %(page_len)s offset %(start)s""",
+		{"txt": "%" + txt + "%", "start": start, "page_len": page_len},
+	)
+
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def get_workflow_action(doctype, txt, searchfield, start, page_len, filters):
+	workflow_action_list = frappe.db.sql(
+		f"""select wt.action 
+			from `tabWorkflow Transition` wt
+			left join `tabWorkflow` wf on wt.parent = wf.name
+			where wf.document_type = "{filters.get("doctype")}"
+			and wt.state = "{filters.get("state")}"
+			and wf.is_active = 1
+		"""
+	, as_dict=True)
+	workflow_action = tuple(wa.action for wa in workflow_action_list)
+	if len(workflow_action) > 0:
+		cond = f"AND name in {workflow_action}"
+	else:
+		return ()
+
+	return frappe.db.sql(
+		f"""select name from `tabWorkflow Action Master`
 			where `{searchfield}` LIKE %(txt)s {cond}
 			order by name limit %(page_len)s offset %(start)s""",
 		{"txt": "%" + txt + "%", "start": start, "page_len": page_len},

@@ -1,4 +1,4 @@
-frappe.ui.form.on("Purchase Invoice", {
+frappe.ui.form.on("Supplier Quotation", {
     before_workflow_action: async (frm) => {
         let promise = new Promise((resolve, reject) => {
             frappe.dom.unfreeze()
