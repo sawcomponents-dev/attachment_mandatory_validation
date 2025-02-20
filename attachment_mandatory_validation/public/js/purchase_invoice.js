@@ -6,7 +6,7 @@ frappe.ui.form.on("Purchase Invoice", {
                 method: "attachment_mandatory_validation.attachment_mandatory.validate_attachment",
                 args: {
                     workflow_state: frm.doc.workflow_state,
-                    workflow_action: frm.selected_workflow_action,
+                    workflow_action: frm.selected_workflow_action || "",
                     doctype: frm.doc.doctype,
                     name: frm.doc.name
                 },
@@ -19,6 +19,6 @@ frappe.ui.form.on("Purchase Invoice", {
                 }
             });
     	});
-    	await promise.catch(() => {frappe.throw(__("Attahment(s) is mandatory to proceed to next state"));});
+    	await promise.catch(() => {frappe.throw(__("Attachment(s) is mandatory to proceed to next state"));});
     }
 })
